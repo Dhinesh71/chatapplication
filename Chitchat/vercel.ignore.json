@@ -1,0 +1,3 @@
+{
+  "note": "This file replaces vercel.json to avoid accidental Vercel deployments of the backend. The real backend should be deployed on a platform for long-running processes (Railway/Render/Fly)."
+}
