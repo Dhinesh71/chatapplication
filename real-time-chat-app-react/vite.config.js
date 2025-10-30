@@ -7,10 +7,18 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: true,
-    host: true
+    host: true,
+    headers: {
+      'Content-Type': 'application/javascript'
+    }
   },
   build: {
     sourcemap: true,
-    minify: true
+    minify: true,
+    rollupOptions: {
+      output: {
+        format: 'es'
+      }
+    }
   }
 })
