@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import io from "socket.io-client";
 
 
@@ -24,11 +24,30 @@ const ChatApp = () => {
 
   const joinChat = () => {
     if (username.trim()) {
-      socketRef.current = io(import.meta.env.VITE_SERVER_URL); // ✅ New socket instance
-      socketRef.current.emit("join", username);
-      socketRef.current.on("message", handleNewMessage);
-      socketRef.current.on("users", handleUserUpdate);
-      setJoined(true);
+      try {
+        socketRef.current = io(import.meta.env.VITE_SERVER_URL || 'http://localhost:5000', {
+          reconnection: true,
+          reconnectionAttempts: 5,
+          reconnectionDelay: 1000
+        });
+        
+        socketRef.current.on('connect', () => {
+          socketRef.current.emit("join", username);
+          setJoined(true);
+        });
+
+        socketRef.current.on('connect_error', (error) => {
+          console.error('Connection error:', error);
+          alert('Failed to connect to chat server. Please try again.');
+          logout();
+        });
+
+        socketRef.current.on("message", handleNewMessage);
+        socketRef.current.on("users", handleUserUpdate);
+      } catch (error) {
+        console.error('Socket initialization error:', error);
+        alert('Failed to initialize chat. Please try again.');
+      }
     }
   };
 
