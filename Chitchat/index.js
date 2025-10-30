@@ -57,3 +57,8 @@ io.on("connection", (socket) => {
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// simple health route so visiting the root URL doesn't return a default 404 page
+app.get("/", (req, res) => {
+  res.status(200).send("Chitchat backend is running\n");
+});
